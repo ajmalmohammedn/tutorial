@@ -91,7 +91,7 @@ def edit(request, pk):
         form = ProductForm(instance=instance)
         context = {
             'form': form,
-            'title': 'Create Product',
+            'title': 'Edit Product',
             'redirect': True,
             'url': reverse('products:edit', kwargs={'pk':instance.pk}),
 

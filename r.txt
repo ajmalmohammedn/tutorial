@@ -1,0 +1,6 @@
+Django==1.11.5
+django-el-pagination==3.1.0
+django-mail-queue==3.1.0
+django-registration-redux==1.7
+psycopg2==2.7.3.1
+pytz==2017.2

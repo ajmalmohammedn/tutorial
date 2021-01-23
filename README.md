@@ -1,1 +1,1 @@
-# tutorial
+# Django Ecommerce

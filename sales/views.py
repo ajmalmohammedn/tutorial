@@ -5,12 +5,14 @@ from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
 from django.forms import formset_factory, inlineformset_factory
 from django.forms.widgets import TextInput, Textarea, Select
+from django.db.models import Q
 import json
 import datetime
 from sales.forms import SaleForm, SaleItemForm
 from sales.models import Sale, SaleItem
 from products.functions import update_stock
 from products.models import Product
+from products.views import autocomplete
 
 def create(request):
     SaleItemFormset = formset_factory(SaleItemForm, extra=1)
@@ -136,7 +138,7 @@ def edit(request, pk):
             extra = extra,
             exclude = ('sale',),
             widgets = {
-            'product': Select(attrs={'class': 'required selectpicker form-control'}),
+            'product': autocomplete.ModelSelect2(url='products:product_autocomplete',attrs={'data-placeholder': 'Product','data-minimum-input-length': 1},),
             'qty': TextInput(attrs={'class': 'form-control', 'placeholder': 'Quantity'}),
             }
         )
@@ -263,6 +265,11 @@ def edit(request, pk):
 
 def sales(request):
     instances = Sale.objects.filter(is_deleted=False)
+    query = request.GET.get('q')
+
+    if query:
+        instances = instances.filter(Q(customer__name__icontains=query) | Q(customer__email__icontains=query) | Q(customer__phone__icontains=query) | Q(customer__address__icontains=query))
+
     context = {
         'title': 'Sales',
         'instances': instances,

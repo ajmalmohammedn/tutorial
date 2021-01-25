@@ -170,10 +170,11 @@
                 prefix: '{{ sale_item_formset.prefix }}',
                 formCssClass: 'dynamic-formset1',
                 'added' : function (row) {
-                    row.find('.sale_item select').selectpicker();
-                    
+                    row.find('.sale_item select').val(null).trigger('change');
+                    row.find('.select2-selection').click();
                 }
             }); 
         });
     </script>
+    {{form.media}}
 {% endblock %}

@@ -3,11 +3,27 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
+from django.db.models import Q
 import json
 import datetime
 from products.models import Product
 from products.forms import ProductForm
+from dal import autocomplete
 
+
+class ProductAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Product.objects.none()
+
+        items = Product.objects.filter(is_deleted=False)
+
+        if self.q:
+            query = self.q
+            items = items.filter(Q(name__icontains=query))
+
+        return items
 
 def create(request):
     if request.method == 'POST':

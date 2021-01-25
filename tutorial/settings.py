@@ -11,6 +11,8 @@ INSTALLED_APPS = [
 	'registration', 
     'mailqueue',
     'el_pagination',
+    'dal',
+    'dal_select2',
 
     'django.contrib.admin',
     'django.contrib.auth',

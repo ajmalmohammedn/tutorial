@@ -3,10 +3,27 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
+from django.db.models import Q
 import json
 import datetime
 from customers.models import Customer
 from customers.forms import CustomerForm
+from dal import autocomplete
+
+
+class CustomerAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Customer.objects.none()
+
+        items = Customer.objects.filter(is_deleted=False)
+
+        if self.q:
+            query = self.q
+            items = items.filter(Q(name__icontains=query) | Q(email__icontains=query) | Q(phone__icontains=query) | Q(address__icontains=query))
+
+        return items
 
 
 def create(request):
@@ -113,6 +130,10 @@ def edit(request, pk):
 
 def customers(request):
     instances = Customer.objects.filter(is_deleted=False)
+    query = request.GET.get('q')
+    if query:
+        instances = instances.filter(Q(name__icontains=query) | Q(email__icontains=query) | Q(phone__icontains=query) | Q(address__icontains=query)  )
+
     context = {
         'title': 'Customers',
         'instances': instances,

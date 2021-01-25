@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import TextInput, Textarea, Select
 from sales.models import Sale, SaleItem
+from dal import autocomplete
 
 
 class SaleForm(forms.ModelForm):
@@ -9,7 +10,7 @@ class SaleForm(forms.ModelForm):
         model = Sale
         exclude = ['auto_id', 'creator', 'updator', 'is_deleted', 'subtotal', 'total']
         widgets = {
-            'customer': Select(attrs={'class': 'required selectpicker form-control'}),
+            'customer': autocomplete.ModelSelect2(url='customers:customer_autocomplete',attrs={'data-placeholder': 'Customer','data-minimum-input-length': 1},),
             'date': TextInput(attrs={'class': 'required date-picker form-control', 'placeholder': 'Date'}),
             'discount': TextInput(attrs={'class': 'form-control', 'placeholder': 'Discount'}),
         }
@@ -31,7 +32,7 @@ class SaleItemForm(forms.ModelForm):
         model = SaleItem
         exclude = ['sale']
         widgets = {
-            'product': Select(attrs={'class': 'required selectpicker form-control'}),
+            'product': autocomplete.ModelSelect2(url='products:product_autocomplete',attrs={'data-placeholder': 'Product','data-minimum-input-length': 1},),
             'qty': TextInput(attrs={'class': 'form-control', 'placeholder': 'Quantity'}),
 
         }

@@ -67,6 +67,21 @@
                                     <small class="lgi-text">{{instance.address}}</small>
                                 </div>
                             </div>
+                            {% if instance.image %}
+                            <div class="list-group-item media">
+                                <div class="media-body">
+                                    <div class="lgi-heading">Image</div>
+                                    <img class="img-responsive" src="{{instance.image.url}}" alt="{{instance.name}}">
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="list-group-item media">
+                                <div class="media-body">
+                                    <div class="lgi-heading">Image</div>
+                                    <small>Image is missing!</small>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

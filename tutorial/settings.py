@@ -139,10 +139,9 @@ ADMIN_EMAIL = 'no-reply@talrop.com'
 ENDLESS_PAGINATION_PER_PAGE = 20
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/Users/sobirn/Documents/django/tutorial/src/tutorial/tutorial/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_URL = '/static/'
-STATIC_FILE_ROOT = '/Users/sobirn/Documents/django/tutorial/src/tutorial/tutorial/static/'
+STATIC_FILE_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
-    '/Users/sobirn/Documents/django/tutorial/src/tutorial/tutorial/static/',
-)
+    )

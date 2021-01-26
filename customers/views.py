@@ -31,7 +31,7 @@ class CustomerAutocomplete(autocomplete.Select2QuerySetView):
 @login_required
 def create(request):
     if request.method == 'POST':
-        form = CustomerForm(request.POST)
+        form = CustomerForm(request.POST, request.FILES)
         if form.is_valid():
             data = form.save(commit=False)
             data.creator = request.user
@@ -39,25 +39,27 @@ def create(request):
             data.auto_id = get_auto_id(Customer)
             data.save()
 
-            response_data = {
-                'status': 'true',
-                'title': 'Successfully Created',
-                'message': 'Customer Successfully Created',
-                'redirect': 'true',
-                'redirect_url': reverse('customers:customer', kwargs={"pk": data.pk})
-
-            }
+            return HttpResponseRedirect(reverse('customers:customer', kwargs={"pk": data.pk}))
         else:
-            message = generate_form_errors(form, formset=False)
+            form = CustomerForm(request.POST)
+            context = {
+                'form': form,
+                'title': 'Create Customer',
+                'redirect': True,
+                'url': reverse('customers:create'),
 
-            response_data = {
-                'Status': 'false',
-                'stable': 'true',
-                'title': 'Form Validation Error',
-                'message': message
+                "is_need_select_picker" : True,
+                "is_need_popup_box" : True,
+                "is_need_custom_scroll_bar" : True,
+                "is_need_wave_effect" : True,
+                "is_need_bootstrap_growl" : True,
+                "is_need_chosen_select" : True,
+                "is_need_grid_system" : True,
+                "is_need_datetime_picker" : True,
+                "is_need_animations": True,
+                "is_dashboard" :True
             }
-
-        return HttpResponse(json.dumps(response_data), content_type='application/javascript')
+            return render(request, 'customers/entry.html', context)
     else:
         form = CustomerForm()
         context = {
@@ -84,31 +86,34 @@ def create(request):
 def edit(request, pk):
     instance = get_object_or_404(Customer.objects.filter(pk=pk))
     if request.method == 'POST':
-        form = CustomerForm(request.POST, instance=instance)
+        form = CustomerForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             data = form.save(commit=False)
             data.updator = request.user
             data.date_updated = datetime.datetime.now()
             data.save()
-            response_data = {
-                'status': 'true',
-                'title': 'Successfully Updated',
-                'message': 'Customer Successfully Updated',
-                'redirect': 'true',
-                'redirect_url': reverse('customers:customer', kwargs={"pk": data.pk})
 
-            }
+            return HttpResponseRedirect(reverse('customers:customer', kwargs={"pk": data.pk}))
         else:
-            message = generate_form_errors(form, formset=False)
+            form = CustomerForm(instance=instance)
+            context = {
+                'form': form,
+                'title': 'Create Customer',
+                'redirect': True,
+                'url': reverse('customers:edit', kwargs={'pk':instance.pk}),
 
-            response_data = {
-                'Status': 'false',
-                'stable': 'true',
-                'title': 'Form Validation Error',
-                'message': message
+                "is_need_select_picker" : True,
+                "is_need_popup_box" : True,
+                "is_need_custom_scroll_bar" : True,
+                "is_need_wave_effect" : True,
+                "is_need_bootstrap_growl" : True,
+                "is_need_chosen_select" : True,
+                "is_need_grid_system" : True,
+                "is_need_datetime_picker" : True,
+                "is_need_animations": True,
+                "is_dashboard" :True
             }
-
-        return HttpResponse(json.dumps(response_data), content_type='application/javascript')
+            return render(request, 'customers/entry.html', context)
     else:
         form = CustomerForm(instance=instance)
         context = {
@@ -161,7 +166,7 @@ def customers(request):
 def customer(request, pk):
     instance = get_object_or_404(Customer.objects.filter(pk=pk))
     context = {
-        'title': 'Customer' + instance.name,
+        'title': 'Customer - ' + instance.name,
         'instance': instance,
 
         "is_need_select_picker" : True,

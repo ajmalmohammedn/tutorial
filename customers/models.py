@@ -9,6 +9,7 @@ class Customer(BaseModel):
     email = models.EmailField()
     phone = models.CharField(max_length=10)
     address = models.TextField()
+    image = models.ImageField(blank=True, null=True, upload_to='customers/')
 
     class Meta:
         db_table = 'customers_customer'

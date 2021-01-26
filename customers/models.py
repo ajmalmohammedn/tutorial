@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from main.models import BaseModel
+from versatileimagefield.fields import VersatileImageField
 
 
 class Customer(BaseModel):
@@ -9,7 +10,7 @@ class Customer(BaseModel):
     email = models.EmailField()
     phone = models.CharField(max_length=10)
     address = models.TextField()
-    image = models.ImageField(blank=True, null=True, upload_to='customers/')
+    image = VersatileImageField('Image', upload_to='customers/', blank=True, null=True)
 
     class Meta:
         db_table = 'customers_customer'

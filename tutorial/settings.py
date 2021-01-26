@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     'el_pagination',
     'dal',
     'dal_select2',
+    'versatileimagefield',
 
     'django.contrib.admin',
     'django.contrib.auth',

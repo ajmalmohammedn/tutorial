@@ -61,7 +61,10 @@ def create(request):
             }
             return render(request, 'customers/entry.html', context)
     else:
-        form = CustomerForm()
+        form = CustomerForm(initial = {
+            'name': 'Ajmal Muhammed',
+            'email': 'ajmalmuhammed.talrop@gmail.com'
+            })
         context = {
             'form': form,
             'title': 'Create Customer',

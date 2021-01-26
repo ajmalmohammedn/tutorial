@@ -208,7 +208,7 @@ def get_customer(request):
         }
     else:
         response_data = {
-            'status': False,
+            'status': 'false',
             'message': 'Customer not exist'
         }
     return HttpResponse(json.dumps(response_data), content_type='application/javascript')

@@ -10,4 +10,5 @@ urlpatterns = [
 	url(r'^$', views.products, name="products"),
 	url(r'^product/(?P<pk>.*)/$', views.product, name="product"),
 	url(r'^delete/(?P<pk>.*)/$', views.delete, name="delete"),
+	url(r'^get-product/$', views.get_product, name="get_product"),
 ]

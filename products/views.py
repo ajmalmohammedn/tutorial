@@ -182,3 +182,21 @@ def delete(request, pk):
         "redirect_url" : reverse('customers:customers')
     }
     return HttpResponse(json.dumps(response_data), content_type='application/javascript')
+
+
+def get_product(request):
+    pk = request.GET.get('id')
+    if Product.objects.filter(pk=pk).exists():
+        product = Product.objects.get(pk=pk)
+
+        response_data = {
+            'status': 'true',
+            'stock': str(product.stock),
+            'pk': str(product.pk)
+        }
+    else:
+        response_data = {
+            'status': 'false',
+            'message': 'Product not exist'
+        }
+    return HttpResponse(json.dumps(response_data), content_type='application/javascript')

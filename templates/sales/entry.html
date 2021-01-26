@@ -132,6 +132,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-column-id="product">Product</th>
+                                                <th data-column-id="stock">Stock</th>
                                                 <th data-column-id="qty">Qty</th>
                                                 <th class="one"></th>
                                             </tr>
@@ -143,6 +144,12 @@
                                                     {{ item.id }}
                                                     <span class="sale_item p-relative">                  
                                                         {{ item.product }}
+                                                    </span>
+                                                </td>
+                                                <td style="width:30%;" >
+                                                    {{ item.id }}
+                                                    <span class="sale_item_stock p-relative">
+                                                        <input class="form-control" type="text" value="0" name="" disabled="" />             
                                                     </span>
                                                 </td>
                                                 <td>
@@ -187,13 +194,19 @@
                 }
             }); 
         });
-        $('#id_customer').change( function(){
+        $('#id_customer').change(function(){
             var $this = $(this);
             get_customer_data($this);   
         });
+
+        $('.sale_item select').change(function(){
+            var $this = $(this);
+            get_product_info($this);
+        });
+
         function get_customer_data(element){
             var customer_id = element.val();
-            if (customer_id != undefined || customer_id != null || customer_id != ""){
+            if (customer_id != null && customer_id != ""){
                 var url = "{% url 'customers:get-customer' %}";
                 $.ajax({
                     type : "GET",
@@ -220,6 +233,31 @@
                 }); 
             }
         };
+
+        function get_product_info(selector){
+            var product_id = selector.val();
+            var parent = selector.parents('tr.form_set_row');
+            if (product_id != null && product_id != ''){
+                var url = "{% url 'products:get_product' %}"
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    dataType: 'json',
+                    data: {
+                        id: product_id,
+                    },
+                    success : function(data) {
+                        var status = data['status'];
+                        if (status == 'true') {
+                            var stock = data['stock'];
+                            parent.find('.sale_item_stock input').val(stock);
+                        }
+                    },
+                    error: function(data) {
+                    } 
+                });
+            }
+        }
     </script>
     {{form.media}}
 {% endblock %}

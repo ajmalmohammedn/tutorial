@@ -5,6 +5,7 @@ from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
 from django.forms import formset_factory, inlineformset_factory
 from django.forms.widgets import TextInput, Textarea, Select
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import json
 import datetime
@@ -14,6 +15,8 @@ from products.functions import update_stock
 from products.models import Product
 from products.views import autocomplete
 
+
+@login_required
 def create(request):
     SaleItemFormset = formset_factory(SaleItemForm, extra=1)
     if request.method == 'POST':
@@ -124,6 +127,7 @@ def create(request):
         return render(request, 'sales/entry.html', context)
 
 
+@login_required
 def edit(request, pk):
     instance = get_object_or_404(Sale.objects.filter(pk=pk))
     if SaleItem.objects.filter(sale=instance).exists():
@@ -263,6 +267,7 @@ def edit(request, pk):
         return render(request, 'sales/entry.html', context)
 
 
+@login_required
 def sales(request):
     instances = Sale.objects.filter(is_deleted=False)
     query = request.GET.get('q')
@@ -288,6 +293,7 @@ def sales(request):
     return render(request, 'sales/sales.html', context)
 
 
+@login_required
 def sale(request, pk):
     instance = get_object_or_404(Sale.objects.filter(pk=pk))
     sale_items = SaleItem.objects.filter(sale=instance)
@@ -310,6 +316,7 @@ def sale(request, pk):
     return render(request, 'sales/sale.html', context)
 
 
+@login_required
 def delete(request, pk):
     instance = get_object_or_404(Sale.objects.filter(pk=pk))
     sale_items = SaleItem.objects.filter(sale=instance)

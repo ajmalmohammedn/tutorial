@@ -109,6 +109,18 @@
                                             <label class="error">{{ form.discount.errors.as_text }}</label>
                                         {% endif %}
                                     </div>
+                                    <div class="form-group fg-line">
+                                        <label for="customer-email">Customer Email</label>
+                                        <input class="form-control" type="email" name="" id="customer-email" placeholder="Email id" value="" disabled />
+                                    </div>
+                                    <div class="form-group fg-line">
+                                        <label for="customer-phone">Customer Phone</label>
+                                        <input class="form-control" type="text" name="" id="customer-phone" placeholder="Phone" value="" disabled />
+                                    </div>
+                                    <div class="form-group fg-line media m-b-0">
+                                        <label for="customer-address">Customer Address</label>
+                                        <input class="form-control" type="textarea" name="" id="customer-phone" placeholder="Phone" value="" disabled />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -175,6 +187,39 @@
                 }
             }); 
         });
+        $('#id_customer').change( function(){
+            var $this = $(this);
+            get_customer_data($this);   
+        });
+        function get_customer_data(element){
+            var customer_id = element.val();
+            if (customer_id != undefined || customer_id != null || customer_id != ""){
+                var url = "{% url 'customers:get-customer' %}";
+                $.ajax({
+                    type : "GET",
+                    url : url,
+                    dataType : 'json',
+                    data : {
+                        id : customer_id,
+                    },
+                    success : function(data) {
+                        var status = data['status'];
+                        if (status == 'true'){
+                            var email = data['email'];
+                            var phone = data['phone'];
+                            var address = data['address'];
+
+                            $("#customer-email").val(email);
+                            $("#customer-phone").val(phone);
+                            $("#customer-address").val(address);
+                        }
+
+                    },
+                    error : function(data){
+                    }
+                }); 
+            }
+        };
     </script>
     {{form.media}}
 {% endblock %}

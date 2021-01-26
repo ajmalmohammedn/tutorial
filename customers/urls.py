@@ -10,4 +10,6 @@ urlpatterns = [
 	url(r'^$', views.customers, name="customers"),
 	url(r'^customer/(?P<pk>.*)/$', views.customer, name="customer"),
 	url(r'^delete/(?P<pk>.*)/$', views.delete, name="delete"),
+
+	url(r'^get-customer/$', views.get_customer, name="get-customer"),
 ]

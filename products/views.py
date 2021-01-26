@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import json
 import datetime
@@ -25,6 +26,8 @@ class ProductAutocomplete(autocomplete.Select2QuerySetView):
 
         return items
 
+
+@login_required
 def create(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
@@ -75,6 +78,7 @@ def create(request):
         return render(request, 'products/entry.html', context)
         
 
+@login_required
 def edit(request, pk):
     instance = get_object_or_404(Product.objects.filter(pk=pk))
     if request.method == 'POST':
@@ -125,6 +129,7 @@ def edit(request, pk):
         return render(request, 'products/entry.html', context)
 
 
+@login_required
 def products(request):
     instances = Product.objects.filter(is_deleted=False)
     context = {
@@ -145,6 +150,7 @@ def products(request):
     return render(request, 'products/products.html', context)
 
 
+@login_required
 def product(request, pk):
     instance = get_object_or_404(Product.objects.filter(pk=pk))
     context = {
@@ -165,6 +171,7 @@ def product(request, pk):
     return render(request, 'products/product.html', context)
 
 
+@login_required
 def delete(request, pk):
     Product.objects.filter(pk=pk).update(is_deleted=True)
     response_data = {

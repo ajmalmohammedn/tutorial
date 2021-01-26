@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect, HttpResponse
 from main.functions import get_auto_id, get_a_id, generate_form_errors
+from django.contrib.auth.decorators import login_required
+from  main.decorators import ajax_required
 from django.db.models import Q
 import json
 import datetime
@@ -26,6 +28,7 @@ class CustomerAutocomplete(autocomplete.Select2QuerySetView):
         return items
 
 
+@login_required
 def create(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
@@ -77,6 +80,7 @@ def create(request):
         return render(request, 'customers/entry.html', context)
 
 
+@login_required
 def edit(request, pk):
     instance = get_object_or_404(Customer.objects.filter(pk=pk))
     if request.method == 'POST':
@@ -128,6 +132,7 @@ def edit(request, pk):
 
 
 
+@login_required
 def customers(request):
     instances = Customer.objects.filter(is_deleted=False)
     query = request.GET.get('q')
@@ -152,6 +157,7 @@ def customers(request):
     return render(request, 'customers/customers.html', context)
 
 
+@login_required
 def customer(request, pk):
     instance = get_object_or_404(Customer.objects.filter(pk=pk))
     context = {
@@ -172,6 +178,8 @@ def customer(request, pk):
     return render(request, 'customers/customer.html', context)
 
 
+@login_required
+@ajax_required
 def delete(request, pk):
     Customer.objects.filter(pk=pk).update(is_deleted=True)
 
@@ -182,4 +190,25 @@ def delete(request, pk):
         "redirect" : "true",
         "redirect_url" : reverse('customers:customers')
     }
+    return HttpResponse(json.dumps(response_data), content_type='application/javascript')
+
+
+def get_customer(request):
+    pk = request.GET.get('id')
+    if Customer.objects.filter(pk=pk).exists():
+        customer = Customer.objects.get(pk=pk)
+
+        response_data = {
+            'status': 'true',
+            'name': customer.name,
+            'email': customer.email,
+            'phone': customer.phone,
+            'address': customer.address,
+            'pk': str(customer.pk)
+        }
+    else:
+        response_data = {
+            'status': False,
+            'message': 'Customer not exist'
+        }
     return HttpResponse(json.dumps(response_data), content_type='application/javascript')

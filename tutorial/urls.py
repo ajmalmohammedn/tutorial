@@ -10,13 +10,17 @@ from django.views.static import serve
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls')),
+    url(r'^api/v1/customers/', include('api.v1.customers.urls', namespace='api_v1_customers')),
+    url(r'^api/v1/sales/', include('api.v1.sales.urls', namespace='api_v1_sales')),
+    url(r'^api/v1/auth/', include('api.v1.authentication.urls', namespace='api_v1_authentication')),
 
     url(r'^$',general_views.app,name='app'),
     url(r'^app/$',general_views.app,name='app'),
     url(r'^app/dashboard/$',general_views.dashboard,name='dashboard'),
 
-	url(r'^app/customers/', include('customers.urls', namespace="customers")),
-	url(r'^app/products/', include('products.urls', namespace="products")),
+    url(r'^app/customers/', include('customers.urls', namespace="customers")),
+    url(r'^app/products/', include('products.urls', namespace="products")),
     url(r'^app/sales/', include('sales.urls', namespace="sales")),
     url(r'^app/accounts/', include('registration.backends.default.urls')),
     url(r'^app/users/', include('users.urls', namespace="users")),

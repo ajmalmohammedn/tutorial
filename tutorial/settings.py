@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'versatileimagefield',
+    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -88,6 +89,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 AUTHENTICATION_BACKENDS = (
     'users.backend.EmailOrUsernameModelBackend',
